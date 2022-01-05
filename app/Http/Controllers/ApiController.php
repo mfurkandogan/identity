@@ -4,16 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
+/**
+ * Class ApiController
+ * @package App\Http\Controllers
+ */
 class ApiController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
-        //Validate data
         $data = $request->only('name', 'email', 'password');
         $validator = Validator::make($data, [
             'name' => 'required|string',
@@ -21,19 +29,16 @@ class ApiController extends Controller
             'password' => 'required|string|min:6|max:50'
         ]);
 
-        //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], Response::HTTP_OK);
+            return response()->json(['error' => $validator->errors()->toArray()], Response::HTTP_OK);
         }
 
-        //Request is valid, create new user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password)
         ]);
 
-        //User created, return success response
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
@@ -41,57 +46,57 @@ class ApiController extends Controller
         ], Response::HTTP_OK);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
-        //valid credential
         $validator = Validator::make($credentials, [
             'email' => 'required|email',
             'password' => 'required|string|min:6|max:50'
         ]);
 
-        //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], Response::HTTP_OK);
+            return response()->json(['error' => $validator->errors()->toArray()], Response::HTTP_OK);
         }
 
-        //Request is validated
-        //Create token
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Login credentials are invalid.',
-                ], 400);
+                ], Response::HTTP_UNAUTHORIZED);
             }
         } catch (JWTException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Could not create token.',
-            ], 500);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        //Token created, return with success response and jwt token
         return response()->json([
             'success' => true,
             'token' => $token,
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout(Request $request)
     {
-        //valid credential
         $validator = Validator::make($request->only('token'), [
             'token' => 'required'
         ]);
 
-        //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json(['error' => $validator->errors()->toArray()], 200);
         }
 
-        //Request is validated, do logout
         try {
             JWTAuth::invalidate($request->token);
 
@@ -107,6 +112,11 @@ class ApiController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function get_user(Request $request)
     {
         $this->validate($request, [
