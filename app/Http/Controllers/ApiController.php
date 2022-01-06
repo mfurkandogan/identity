@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Helper\TokenGenerator;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Class ApiController
@@ -21,7 +20,7 @@ class ApiController extends Controller
     {
         $data = $request->only('name', 'email', 'password');
         $validator = Validator::make($data, [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|max:50'
         ]);
@@ -41,12 +40,21 @@ class ApiController extends Controller
                 'message' => 'User created successfully',
                 'data' => $user
             ], Response::HTTP_OK);
-        }catch (){
+        }catch (QueryException $e){
+            $errorCode = $e->errorInfo[1];
+           if ($errorCode == 1062) {
+               return response()->json([
+                   'success' => false,
+                   'message' => 'Username or email already exists'
+               ], Response::HTTP_OK);
+           }
 
         }
 
-
-
+        return response()->json([
+            'success' => false,
+            'message' => 'Error'
+        ], Response::HTTP_OK);
 
     }
 
