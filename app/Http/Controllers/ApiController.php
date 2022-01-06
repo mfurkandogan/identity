@@ -146,7 +146,7 @@ class ApiController extends Controller
         $validatedData = $validator->validated();
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()->toArray()], Response::HTTP_OK);
+            return response()->json(['error' => $validator->errors()->toArray()], Response::HTTP_BAD_REQUEST);
         }
 
         $user = User::where('email',$validatedData['user'])->orWhere('name',$validatedData['user'])->first();

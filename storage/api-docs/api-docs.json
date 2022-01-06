@@ -48,7 +48,7 @@
                         "description": "successful operation"
                     },
                     "400": {
-                        "description": "Invalid username/password supplied"
+                        "description": "Invalid username/password"
                     }
                 }
             }
