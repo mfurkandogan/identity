@@ -6,7 +6,7 @@
         "version": "1.0"
     },
     "paths": {
-        "/api/register": {
+        "/api/v1/register": {
             "post": {
                 "tags": [
                     "user"
@@ -16,7 +16,7 @@
                 "operationId": "login",
                 "parameters": [
                     {
-                        "name": "username",
+                        "name": "name",
                         "in": "query",
                         "description": "The user name for register",
                         "required": true,
@@ -53,7 +53,7 @@
                 }
             }
         },
-        "/api/login": {
+        "/api/v1/login": {
             "post": {
                 "tags": [
                     "user"

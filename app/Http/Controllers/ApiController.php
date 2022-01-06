@@ -14,13 +14,13 @@ use Illuminate\Support\Facades\Validator;
  * Class ApiController
  * @package App\Http\Controllers
  *
- * @OA\Post(path="/api/register",
+ * @OA\Post(path="/api/v1/register",
  *   tags={"user"},
  *   summary="Register user into the system",
  *   description="",
  *   operationId="login",
  *   @OA\Parameter(
- *     name="username",
+ *     name="name",
  *     required=true,
  *     in="query",
  *     description="The user name for register",
@@ -104,7 +104,7 @@ class ApiController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/login",
+     * @OA\Post(path="/api/v1/login",
      *   tags={"user"},
      *   summary="Logs user into the system",
      *   description="",
