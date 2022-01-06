@@ -13,6 +13,47 @@ use Illuminate\Support\Facades\Validator;
 /**
  * Class ApiController
  * @package App\Http\Controllers
+ *
+ * @OA\Post(path="/api/register",
+ *   tags={"user"},
+ *   summary="Register user into the system",
+ *   description="",
+ *   operationId="login",
+ *   @OA\Parameter(
+ *     name="username",
+ *     required=true,
+ *     in="query",
+ *     description="The user name for register",
+ *     @OA\Schema(
+ *         type="string"
+ *     )
+ *   ),
+ *   @OA\Parameter(
+ *     name="email",
+ *     required=true,
+ *     in="query",
+ *     description="The email for register",
+ *     @OA\Schema(
+ *         type="string"
+ *     )
+ *   ),
+ *   @OA\Parameter(
+ *     name="password",
+ *     required=true,
+ *     in="query",
+ *     description="The password for register",
+ *     @OA\Schema(
+ *         type="string",
+ *     ),
+ *     description="The password for login in clear text",
+ *   ),
+ *   @OA\Response(
+ *     response=200,
+ *     description="successful operation",
+ *     @OA\Schema(type="string")
+ *   ),
+ *   @OA\Response(response=400, description="Invalid username/password supplied")
+ * )
  */
 class ApiController extends Controller
 {
