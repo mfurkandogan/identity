@@ -52,7 +52,7 @@ Body Example :
 {
     "name":"",          --required
     "email":"",         --required
-    "password":""       --required(clear text)
+    "password":""       --required  (clear text)
 }
 ```
 
