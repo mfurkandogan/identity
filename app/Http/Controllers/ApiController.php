@@ -52,7 +52,7 @@ use Illuminate\Support\Facades\Validator;
  *     description="successful operation",
  *     @OA\Schema(type="string")
  *   ),
- *   @OA\Response(response=400, description="Invalid username/password supplied")
+ *   @OA\Response(response=400, description="Invalid username/password")
  * )
  */
 class ApiController extends Controller
@@ -91,15 +91,15 @@ class ApiController extends Controller
                return response()->json([
                    'success' => false,
                    'message' => 'Username or email already exists'
-               ], Response::HTTP_OK);
+               ], Response::HTTP_BAD_REQUEST);
            }
 
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'Error'
-        ], Response::HTTP_OK);
+            'message' => 'An error occurred during the registration process.'
+        ], Response::HTTP_BAD_REQUEST);
 
     }
 
@@ -155,7 +155,7 @@ class ApiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Login credentials are invalid.',
-            ], Response::HTTP_UNAUTHORIZED);
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         $token = app(TokenGenerator::class)->generateToken($user);
@@ -164,7 +164,7 @@ class ApiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Could not create token.',
-            ], Response::HTTP_UNAUTHORIZED);
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         return response()->json([
