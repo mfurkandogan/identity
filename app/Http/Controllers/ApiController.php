@@ -57,6 +57,10 @@ use Illuminate\Support\Facades\Validator;
  */
 class ApiController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         $data = $request->only('name', 'email', 'password');
@@ -99,6 +103,37 @@ class ApiController extends Controller
 
     }
 
+    /**
+     * @OA\Post(path="/api/login",
+     *   tags={"user"},
+     *   summary="Logs user into the system",
+     *   description="",
+     *   operationId="login",
+     *   @OA\Parameter(
+     *     name="username or email",
+     *     required=true,
+     *     in="query",
+     *     description="User name or Email for login",
+     *     @OA\Schema(
+     *         type="string"
+     *     )
+     *   ),
+     *   @OA\Parameter(
+     *     name="password",
+     *     in="query",
+     *     @OA\Schema(
+     *         type="string",
+     *     ),
+     *     description="The password for login in clear text",
+     *   ),
+     *   @OA\Response(
+     *     response=200,
+     *     description="successful operation",
+     *     @OA\Schema(type="string")
+     *   ),
+     *   @OA\Response(response=400, description="Invalid username/password supplied")
+     * )
+     */
     public function authenticate(Request $request)
     {
         $credentials = $request->only('user', 'password');
