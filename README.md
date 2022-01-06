@@ -30,21 +30,19 @@ php artisan serve
 
 ## User Endpoints
 
+You can check from this link on your localhost:
+
+> http://127.0.0.1:8000/api/documentation
+
+
+
 ### Post - Login Request : /api/v1/login
 
 ```
 Body Example : 
 {
-    "email"     :    "",        --required
-    "password"  :    ""         --required
-}
-```
-
-### Get - User Request : /api/v1/user
-```
-Header Example : 
-{
-    Bearer Token        --required
+    "user"     :     "",        --required (user name or email)
+    "password"  :    ""         --required (clear text)
 }
 ```
 
@@ -54,16 +52,7 @@ Body Example :
 {
     "name":"",          --required
     "email":"",         --required
-    "password":""       --required
-}
-```
-
-
-### Post - Logout Request : /api/v1/logout
-```
-Header Example : 
-{
-    Bearer Token        --required
+    "password":""       --required(clear text)
 }
 ```
 
