@@ -30,25 +30,32 @@ class ApiController extends Controller
             return response()->json(['error' => $validator->errors()->toArray()], Response::HTTP_OK);
         }
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
-        ]);
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password)
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'User created successfully',
+                'data' => $user
+            ], Response::HTTP_OK);
+        }catch (){
 
-        return response()->json([
-            'success' => true,
-            'message' => 'User created successfully',
-            'data' => $user
-        ], Response::HTTP_OK);
+        }
+
+
+
+
     }
 
     public function authenticate(Request $request)
     {
-        $credentials = $request->only('name', 'password');
+        $credentials = $request->only('user', 'password');
 
         $validator = Validator::make($credentials, [
-            'name' => 'required',
+            'user' => 'required',
             'password' => 'required|string|min:6|max:50'
         ]);
 
@@ -58,7 +65,7 @@ class ApiController extends Controller
             return response()->json(['error' => $validator->errors()->toArray()], Response::HTTP_OK);
         }
 
-        $user = User::where('email',$validatedData['name'])->orWhere('name',$validatedData['name'])->first();
+        $user = User::where('email',$validatedData['user'])->orWhere('name',$validatedData['user'])->first();
 
         if (!$user || !Hash::check($validatedData["password"], $user->password)) {
             return response()->json([
